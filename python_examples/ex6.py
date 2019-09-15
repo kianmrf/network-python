@@ -1,5 +1,5 @@
 number = input("Please Enter an Integer: ")
-comp_mode = input("Press 'f' for factorial of n or 's' for sum of 1-n:")
+comp_mode = input("Press 'f' for factorial of n or 's' for sum of 1-n: ")
 
 def sum(n):
     sum = 0
@@ -11,11 +11,11 @@ def fact(n):
     if n == 1:
         return n
     else:
-        return (n * fact(n-1))
+        return n * fact(n-1)
 
 
 if comp_mode == 'f':
-    fact(int(number))
+    print("The factorial of n is: ", str(fact(int(number))))
 elif comp_mode == 's':
     sum(int(number))
 else:
