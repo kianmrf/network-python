@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "mmaro017 cgi-bin access"
+AuthUserFile  /aul/homes/downeyt/etc/1908/registered.passwd
+Require user downeyt mmaro017
