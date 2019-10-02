@@ -4,7 +4,7 @@ from socket import socket, SOCK_STREAM, AF_INET
 #Create a TCP socket 
 #Notice the use of SOCK_STREAM for TCP packets
 serverSocket = socket(AF_INET, SOCK_STREAM)
-serverPort=12001
+serverPort=1616
 # Assign IP address and port number to socket
 serverSocket.bind(('', serverPort))
 serverSocket.listen(1)
