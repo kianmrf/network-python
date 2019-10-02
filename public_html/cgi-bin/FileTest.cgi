@@ -1,4 +1,13 @@
+#!/usr/bin/python3
+
+import sys
+
+sys.stderr = sys.stdout
+
+print("Content-type: text/plain\n")	
+
 #TCPClient.py
+
 
 from socket import socket, AF_INET, SOCK_STREAM
 serverName = 'localhost'
