@@ -19,6 +19,7 @@ while True:
         filename = message.split()[1]
         # sendFile(connectionSocket, filename, 'text/plain')
         f = open(filename[1:])
+        print("KIR TYPE: "+filename[2:])
         outputdata = f.read()
         for i in range(0, len(outputdata)):
             connectionSocket.send(outputdata[i])
@@ -28,12 +29,14 @@ while True:
         # connectionSocket.send(message.encode())
         connectionSocket.close()
     except IOError:
-        print("Not foun %s" % filename)
-        sendError(connectionSocket, '404', 'Not found')
+        errormsg = 'File Not Found - 404'
+        print(errormsg)
+        connectionSocket.send(errormsg).encode()
+        # endError(connectionSocket, '404', 'Not found')
         connectionSocket.close()
-    # except KeyboardInterrupt:
-    #     print ("\nInterrupted by CTRL-C")
-    #     break
+    except KeyboardInterrupt:
+        print ("\nInterrupted by CTRL-C")
+        break
 
 
 serverSocket.close()
