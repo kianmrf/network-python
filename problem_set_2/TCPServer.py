@@ -14,13 +14,22 @@ while True:
             connectionSocket, addr = serverSocket.accept()
             print ("Connection from %s port %s" % addr)
 		# Receive the client packet
-            message = connectionSocket.recv(2048).decode()
+            message = connectionSocket.recv(4096).decode()
             print ("Orignal message from client: ", message)
+		# Send file requested
+	    filename = message.split().partition("/")
+	    sendFile(connectionSocket, filename, 'text/plain')
+
 		# Capitalize the message from the client
-            message = message.upper()
-            connectionSocket.send(message.encode())
+            # message = message.upper()
+            # connectionSocket.send(message.encode())
             connectionSocket.close()
 	except KeyboardInterrupt:
             print ("\nInterrupted by CTRL-C")
             break
+	except IOError:
+	    print("Not foun %s" % filename)
+	    sendError(connectionSocket, '404', 'Not found')
+	    connectionSocket.close()
+
 serverSocket.close()
