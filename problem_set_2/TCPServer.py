@@ -18,7 +18,7 @@ def main():
                 # Receive the client packet
             message = connectionSocket.recv(4096).decode('utf-8')
             print ("Client request: ", message)
-            string_list = message.split(' ') 
+            string_list = message.split(' ')
             method = string_list[0]
             requesting_file = string_list[1]
 
@@ -28,6 +28,22 @@ def main():
             myfile = myfile.lstrip('/')
             if(myfile == ''):
                 myfile = 'index.html'
+
+            file = open(myfile,'rb') # open file , r => read , b => byte format
+            response = file.read()
+            file.close()
+
+            header = 'HTTP/1.1 200 OK\n'
+            if(myfile.endswith(".jpg")):
+                mimetype = 'image/jpg'
+            elif(myfile.endswith(".css")):
+                mimetype = 'text/css'
+            else:
+                mimetype = 'text/html'
+            header += 'Content-Type: '+str(mimetype)+'\n\n'
+            final_response = header.encode('utf-8')
+            final_response += response
+            connectionSocket.send(final_response)
 
 
             # filename = message.split(' ')[1]
@@ -43,13 +59,13 @@ def main():
             # connectionSocket.send(message.encode())
             connectionSocket.close()
         except IOError:
-            errormsg = 'File Not Found - 404'
-            print(errormsg)
-            print('HTTP/1.1 404 Nocdt Found\r\n')
-            print('Content-Type: text/html\r\n\r\n')
-            print('<html><head></head><body><h1>404 Not Found</h1></body></html>')
-            connectionSocket.send(errormsg.encode())
+            header = 'HTTP/1.1 404 Not Found\n\n'
+            response = '<html><body><center><h3>Error 404: File not found</h3><p>Python HTTP Server</p></center></body></html>'.encode('utf-8')
+            # connectionSocket.send(errormsg.encode())
             # sendError(connectionSocket, '404', 'Not found')
+            final_response = header.encode('utf-8')
+            final_response += response
+            connectionSocket.send(final_response)
             connectionSocket.close()
 
         except KeyboardInterrupt:
