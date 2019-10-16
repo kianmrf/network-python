@@ -1,13 +1,28 @@
-
 <!doctype html>
 <html>
   <head>
-    <title>Mohammadkian Maroofi's CNT4713 Page</title>
+    <title>E-mail Client Example</title>
     <meta charset="utf8">
   </head>
   <body>
-    <h1>Mohammadkian Maroofi's CNT4713 Page</h1>
-   
+    <h1>E-mail Client Example</h1>
+    
+    <form action="/~mmaro017/cgi-bin/sendEmail.cgi">
+  <fieldset>
+    <legend>Email Contents:</legend>
+    From address:<br>
+    <input type="text" name="from" value=""><br>
+    To address:<br>
+    <input type="text" name="to" value=""><br>
+    Subject:<br>
+    <input type="text" name="subject" value=""><br>
+    Message:<br>
+    <input type="text" name="message" value=""><br><br>
+    <input type="submit" value="Send">
+  </fieldset>
+</form>
+	
+
+
  </body>
 </html>
-
