@@ -2,6 +2,9 @@
 
 import socket
 import time
+import sys
+
+sys.stderr = sys.stdout
 
 # Import modules for CGI handling 
 import cgi, cgitb 
@@ -29,7 +32,7 @@ form = cgi.FieldStorage()
 
 # Get data from fields
 fromAddress = form.getvalue('from')
-to  = form.getValue('to')
+to  = form.getvalue('to')
 subject = form.getvalue('subject')
 message = form.getvalue('message')
 
