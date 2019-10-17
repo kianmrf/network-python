@@ -36,6 +36,19 @@ to  = form.getvalue('to')
 subject = form.getvalue('subject')
 message = form.getvalue('message')
 
+
+
+print "Content-type:text/html\r\n\r\n"
+print "<html>"
+print "<head>"
+print "<title>Hello - Second CGI Program</title>"
+print "</head>"
+print "<body>"
+print "<h2>Hello %s %s %s %s</h2>" % (fromAddress, to, subject, message)
+print "</body>"
+print "</html>"
+
+
 # Debug and logging
 print fromAddress, to, subject, message
 
