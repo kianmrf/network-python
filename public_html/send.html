@@ -7,17 +7,17 @@
   <body>
     <h1>E-mail Client Example</h1>
     
-    <form action="/~mmaro017/cgi-bin/sendEmail.cgi">
+    <form action="/~mmaro017/cgi-bin/sendEmail.cgi" target="_self" method="get" >
   <fieldset>
     <legend>Email Contents:</legend>
     From address:<br>
     <input type="text" name="from" value=""><br>
     To address:<br>
     <input type="text" name="to" value=""><br>
-    Subject:<br>
+        Subject:<br>
     <input type="text" name="subject" value=""><br>
-    Message:<br>
-    <input type="text" name="message" value=""><br><br>
+        Message:<br>
+    <textarea type="text" rows="6" cols="50" name="message" value=""></textarea><br><br>
     <input type="submit" value="Send">
   </fieldset>
 </form>
