@@ -5,6 +5,7 @@ import time
 
 # Import modules for CGI handling 
 import cgi, cgitb 
+cgitb.enable()
 
 def send_recv(socket, msg, code):
     if msg != None:
@@ -27,13 +28,13 @@ def send(socket, msg):
 form = cgi.FieldStorage() 
 
 # Get data from fields
-from = form.getvalue('from')
-to  = form.getvalue('to')
-subject = form.getValue('subject')
-message = form.getValue('message')
+fromAddress = form.getvalue('from')
+to  = form.getValue('to')
+subject = form.getvalue('subject')
+message = form.getvalue('message')
 
 # Debug and logging
-print from, to, subject, message
+print fromAddress, to, subject, message
 
 
 serverName = 'smtp.cis.fiu.edu'
