@@ -6,8 +6,8 @@ import sys
 
 sys.stderr = sys.stdout
 
-# Import modules for CGI handling 
-import cgi, cgitb 
+# Import modules for CGI handling
+import cgi, cgitb
 cgitb.enable()
 
 def send_recv(socket, msg, code):
@@ -27,8 +27,8 @@ def send(socket, msg):
 
 
 
-# Create instance of FieldStorage 
-form = cgi.FieldStorage() 
+# Create instance of FieldStorage
+form = cgi.FieldStorage()
 
 # Get data from fields
 fromAddress = form.getvalue('from')
@@ -37,17 +37,15 @@ subject = form.getvalue('subject')
 message = form.getvalue('message')
 
 
-
 print "Content-type:text/html\r\n\r\n"
 print "<html>"
 print "<head>"
 print "<title>Hello - Second CGI Program</title>"
 print "</head>"
 print "<body>"
-print "<h2>Hello %s %s %s %s</h2>" % (fromAddress, to, subject, message)
+print "<h2>Hello %s %s %s %s</h2>" % (fromAddress.split('@')[0], to.split('@')[1], subject, message)
 print "</body>"
 print "</html>"
-
 
 # Debug and logging
 print fromAddress, to, subject, message
@@ -60,11 +58,12 @@ clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 clientSocket.connect((serverName, serverPort))
 recv=send_recv(clientSocket, None, '220')
 
-clientName = 'test-km'
-userName="kmtestpy"
-userServer="gmail.com"
-toName="bytesizebook"
-toServer="gmail.com"
+clientName = 'Example-kianmrf-CNT4713'
+#userName="kmtestpy"
+userName = "TEST"
+userServer="TEST.COM"
+toName="TEST"
+toServer="TEST.COM"
 #Send HELO command and print server response.
 heloCommand='EHLO %s' % clientName
 recvFrom = send_recv(clientSocket, heloCommand, '250')
@@ -79,13 +78,13 @@ dataCommand='DATA'
 dataRcpt = send_recv(clientSocket, dataCommand, '354')
 #Send message data.
 send(clientSocket, "Date: %s" % time.strftime("%a, %d %b %Y %H:%M:%S -0400", time.localtime()));
-send(clientSocket, "From:Test Python <%s@%s>" % (userName, userServer));
-send(clientSocket, "Subject: Simple Mail Message");
+send(clientSocket, "From: <%s@%s>" % (userName, userServer));
+send(clientSocket, "Subject: %s" % (subject));
 send(clientSocket, "To: %s@%s" % (toName, toServer));
 send(clientSocket, ""); #End of headers
-send(clientSocket, "Hello World");
-send(clientSocket, "Hola Mundo");
-send(clientSocket, "ocelot client");
+send(clientSocket, message);
+#send(clientSocket, "Hola Mundo");
+#send(clientSocket, "ocelot client");
 #Message ends with a single period.
 send_recv(clientSocket, ".", '250');
 #Send QUIT command and get server response.
