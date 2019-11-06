@@ -40,10 +40,25 @@ message = form.getvalue('message')
 print "Content-type:text/html\r\n\r\n"
 print "<html>"
 print "<head>"
-print "<title>Hello - Second CGI Program</title>"
+print "<title>E-mail Client Example</title>"
 print "</head>"
 print "<body>"
-print "<h2>Hello %s %s %s %s</h2>" % (fromAddress.split('@')[0], to.split('@')[1], subject, message)
+print "<h1>E-mail Client Example</h1>"
+print "<form action='/~mmaro017/cgi-bin/send-email.cgi' target='_self' method='get' >"
+print "<fieldset>"
+print "<legend>Email Contents:</legend>"
+print "From address:<br>"
+print "<input type='text' name='from' value='%s'><br>" % (fromAddress)
+print "To address:<br>"
+print "<input type='text' name='to' value='%s'><br>" % (to)
+print "Subject:<br>"
+print "<input type='text' name='subject' value='%s'><br>" % (subject)
+print "Message:<br>"
+print "<input type='text' rows='6' cols='50' name='message' value='%s'></textarea><br><br>" % (message)
+print "<input type='submit' value='Send Again!'>"
+print "</fieldset>"
+print "</form>"
+# print "<h2>Hello %s %s %s %s</h2>" % (fromAddress.split('@')[0], to.split('@')[1], subject, message)
 print "</body>"
 print "</html>"
 
@@ -60,10 +75,10 @@ recv=send_recv(clientSocket, None, '220')
 
 clientName = 'Example-kianmrf-CNT4713'
 #userName="kmtestpy"
-userName = "TEST"
-userServer="TEST.COM"
-toName="TEST"
-toServer="TEST.COM"
+userName = fromAddress.split('@')[0]
+userServer= fromAddress.split('@')[1]
+toName= to.split('@')[0]
+toServer= to.split('@')[1]
 #Send HELO command and print server response.
 heloCommand='EHLO %s' % clientName
 recvFrom = send_recv(clientSocket, heloCommand, '250')
