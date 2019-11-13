@@ -127,7 +127,7 @@ def main():
             # if filenameLanguage == filename:
             #    seconds = ifModifiedSinceSeconds(headers)
             sendFile(connectionSocket, filenameLanguage, "text/html", seconds)
-            connectionSocket.shutdown(SHUT_WR)
+            # connectionSocket.shutdown(SHUT_WR)
             connectionSocket.close()
         except IOError:
             print "Not found %s" % filename
