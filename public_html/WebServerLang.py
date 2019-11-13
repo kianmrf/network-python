@@ -49,6 +49,8 @@ def acceptLanguageModifyFile(filename, headers):
         langEx = ".de"
     elif preferredLanguage == "es":
         langEx = ".es"
+    elif preferredLanguage == "fa":
+        langEx = ".fa"
     else :
         langEx = ""
     filename = filename + langEx
@@ -122,8 +124,8 @@ def main():
             print "Status Line: " , headers["STATUS-LINE"]
             filenameLanguage = acceptLanguageModifyFile(filename, headers)
             seconds = None
-            if filenameLanguage == filename:
-                seconds = ifModifiedSinceSeconds(headers)
+            # if filenameLanguage == filename:
+            #    seconds = ifModifiedSinceSeconds(headers)
             sendFile(connectionSocket, filenameLanguage, "text/html", seconds)
             connectionSocket.shutdown(SHUT_WR)
             connectionSocket.close()

@@ -1,0 +1,9 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Web Server Language Example</title>
+    <meta charset="utf8">
+  </head>
+  <h1>Bonjour!</h1>
+</html>
+
