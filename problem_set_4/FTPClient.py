@@ -3,6 +3,7 @@
 from socket import socket, AF_INET, SOCK_STREAM
 from ast import literal_eval
 import time
+import sys
 
 def send(socket, msg): 
 	print "===>sending: " + msg
@@ -23,7 +24,7 @@ while condition:
 	print message
 	condition = message[0:6] != "220---"
 message = send(clientSocket,"USER Anonymous")
-message = send(clientSocket,"PASS downeyt@cs.fiu.edu")
+message = send(clientSocket,"PASS kianmrf@cs.fiu.edu")
 message = send(clientSocket,"TYPE A")
 message = send(clientSocket,"PASV")
 start = message.find("(")
