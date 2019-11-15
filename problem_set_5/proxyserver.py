@@ -15,11 +15,27 @@ max_connections = 10
 BUFFER_SIZE = 4096
 CACHE_DIR = "./cache"
 BLACKLIST_FILE = ""
-USERNAME_PASSWORD_FILE = "username_password.txt"
 MAX_CACHE_BUFFER = 3
 NO_OF_OCC_FOR_CACHE = 2
 blocked = []
 admins = []
+
+def main():
+    if not os.path.isdir(CACHE_DIR):
+    os.makedirs(CACHE_DIR)
+
+    f = open(BLACKLIST_FILE, "rb")
+    data = ""
+    while True:
+        chunk = f.read()
+        if not len(chunk):
+            break
+        data += chunk
+    f.close()
+    blocked = data.splitlines()
+    for file in os.listdir(CACHE_DIR):
+        os.remove(CACHE_DIR + "/" + file)
+
 
 def start_proxy_server():
 
