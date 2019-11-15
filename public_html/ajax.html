@@ -9,10 +9,14 @@
   <button id "uk" type="button">UK</button>
   <button id="de" type="button">DE</button>
   <button id="ru" type="button">RU</button>
+  <br/>
   <div id="cities"></div>
   <script>
      $(document).ready(function(){
-    
+ 	 $("#us").click(function(){
+		// $("#cities").load("us.txt").replace(/\n/g, "<br />"));
+       		$("#cities").load("resData/cities_us.txt");
+	 });   
      });
   </script>
 </html>
