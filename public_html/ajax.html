@@ -4,11 +4,25 @@
     <title>Web Server Language Example</title>
     <meta charset="utf8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+	.button {
+ 		 background-color: #4CAF50;
+ 		 border: none;
+  	  	 color: white;
+ 		 padding: 15px 32px;
+ 		 text-align: center;
+ 		 text-decoration: none;
+  		display: inline-block;
+  		font-size: 16px;
+  		margin: 4px 2px;
+  		cursor: pointer;
+	}
+    </style>
   </head>
-  <button id="us" type="button">US</button>
-  <button id "uk" type="button">UK</button>
-  <button id="de" type="button">DE</button>
-  <button id="ru" type="button">RU</button>
+  <button class="button" id="us" type="button">US</button>
+  <button  class="button" id="uk" type="button">UK</button>
+  <button class="button"  id="de" type="button">DE</button>
+  <button  class="button"  id="ru" type="button">RU</button>
   <br/>
   <div id="cities"></div>
   <script>
@@ -16,7 +30,17 @@
  	 $("#us").click(function(){
 		// $("#cities").load("us.txt").replace(/\n/g, "<br />"));
        		$("#cities").load("resData/cities_us.txt");
-	 });   
+	 });
+	 $("#ru").click(function(){
+                $("#cities").load("resData/cities_ru.txt");
+         });   
+	 $("#de").click(function(){
+                $("#cities").load("resData/cities_de.txt");
+         });
+	$("#uk").click(function(){
+                $("#cities").load("resData/cities_uk.txt");
+        	// alert("js is working"); 
+	});
      });
   </script>
 </html>
