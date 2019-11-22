@@ -18,7 +18,8 @@ BLACKLIST_FILE = ""
 MAX_CACHE_BUFFER = 3
 NO_OF_OCC_FOR_CACHE = 2
 blocked = []
-admins = []
+logs = {}
+locks = {}
 
 def main():
     if not os.path.isdir(CACHE_DIR):
@@ -36,6 +37,51 @@ def main():
     for file in os.listdir(CACHE_DIR):
         os.remove(CACHE_DIR + "/" + file)
 
+
+
+def is_blocked(client_socket, client_addr, details):
+    if not (details["server_url"] + ":" + str(details["server_port"])) in blocked:
+        return False
+    return True
+
+
+# A thread function to handle one request
+def handle_one_request_(client_socket, client_addr, client_data):
+
+    details = parse_details(client_addr, client_data)
+
+    if not details:
+        print "no any details"
+        client_socket.close()
+        return
+
+    isb = is_blocked(client_socket, client_addr, details)
+
+    """
+        Here we can check whether request is from outside the campus area or not.
+        We have IP and port to which the request is being made.
+        We can send error message if required.
+    """
+
+    if isb:
+        print "Block status : ", isb
+
+    if isb:
+        client_socket.send("HTTP/1.0 200 OK\r\n")
+        client_socket.send("Content-Length: 11\r\n")
+        client_socket.send("\r\n")
+        client_socket.send("Error\r\n")
+        client_socket.send("\r\n\r\n")
+
+    elif details["method"] == "GET":
+        details = get_cache_details(client_addr, details)
+        if details["last_mtime"]:
+            details = insert_if_modified(details)
+        serve_get(client_socket, client_addr, details)
+
+    client_socket.close()
+    print client_addr, "closed"
+    print
 
 def start_proxy_server():
 

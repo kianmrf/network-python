@@ -1,5 +1,11 @@
-#TCPServer.py
-
+import copy
+import thread
+import sys
+import os
+import datetime
+import time
+import json
+import threading
 from socket import socket, SOCK_STREAM, AF_INET
 import webbrowser
 #Create a TCP socket
@@ -22,7 +28,7 @@ def main():
             method = string_list[0]
             requesting_url = string_list[1]
 
-            print('Client request ',requesting_url)
+            print('Client request ',requesting_url.split("://")[1].split("/")[0])
 
             connectionSocket.close()
         except IOError:
@@ -40,5 +46,3 @@ def main():
 
 
 main()
-
-
