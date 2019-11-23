@@ -46,6 +46,62 @@ def is_blocked(client_socket, client_addr, details):
     return True
 
 
+# returns a dictionary of details
+def parse_details(client_addr, client_data):
+    try:
+        # parse first line like below
+        # http:://127.0.0.1:20020/1.data
+
+        lines = client_data.splitlines()
+        while lines[len(lines)-1] == '':
+            lines.remove('')
+        first_line_tokens = lines[0].split()
+        url = first_line_tokens[1]
+
+        # get starting index of IP
+        url_pos = url.find("://")
+        if url_pos != -1:
+            protocol = url[:url_pos]
+            url = url[(url_pos+3):]
+        else:
+            protocol = "http"
+
+        # get port if any
+        # get url path
+        port_pos = url.find(":")
+        path_pos = url.find("/")
+        if path_pos == -1:
+            path_pos = len(url)
+
+
+        # change request path accordingly
+        if port_pos==-1 or path_pos < port_pos:
+            server_port = 80
+            server_url = url[:path_pos]
+        else:
+            server_port = int(url[(port_pos+1):path_pos])
+            server_url = url[:port_pos]
+
+        # build up request for server
+        first_line_tokens[1] = url[path_pos:]
+        lines[0] = ' '.join(first_line_tokens)
+        client_data = "\r\n".join(lines) + '\r\n\r\n'
+
+        return {
+            "server_port" : server_port,
+            "server_url" : server_url,
+            "total_url" : url,
+            "client_data" : client_data,
+            "protocol" : protocol,
+            "method" : first_line_tokens[0],
+        }
+
+    except Exception as e:
+        print e
+        return None
+
+
+
 # A thread function to handle one request
 def handle_one_request_(client_socket, client_addr, client_data):
 
@@ -85,17 +141,17 @@ def handle_one_request_(client_socket, client_addr, client_data):
     print
 
 def start_proxy_server():
-    proxy_port = 2525
     # Initialize socket
+    proxy_port = 2525
+
     try:
         proxy_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         proxy_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         proxy_socket.bind(('', proxy_port))
         proxy_socket.listen(max_connections)
 
-        print "Serving proxy on %s port %s ..." % (
-            str(proxy_socket.getsockname()[0]),
-            str(proxy_socket.getsockname()[1])
+        print "Serving proxy on localhost port %s ..." % (
+            str(proxy_socket.getsockname()[0])
             )
 
     except Exception as e:
