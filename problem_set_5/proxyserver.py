@@ -23,19 +23,20 @@ locks = {}
 
 def main():
     if not os.path.isdir(CACHE_DIR):
-    os.makedirs(CACHE_DIR)
+        os.makedirs(CACHE_DIR)
 
-    f = open(BLACKLIST_FILE, "rb")
-    data = ""
-    while True:
-        chunk = f.read()
-        if not len(chunk):
-            break
-        data += chunk
-    f.close()
-    blocked = data.splitlines()
+    # f = open(BLACKLIST_FILE, "rb")
+    # data = ""
+    # while True:
+    #     chunk = f.read()
+    #     if not len(chunk):
+    #         break
+    #     data += chunk
+    # f.close()
+    # blocked = data.splitlines()
     for file in os.listdir(CACHE_DIR):
         os.remove(CACHE_DIR + "/" + file)
+    start_proxy_server()
 
 
 
@@ -84,7 +85,7 @@ def handle_one_request_(client_socket, client_addr, client_data):
     print
 
 def start_proxy_server():
-
+    proxy_port = 2525
     # Initialize socket
     try:
         proxy_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -131,3 +132,5 @@ def start_proxy_server():
             proxy_socket.close()
             print "\nProxy server shutting down ..."
             break
+
+main()
