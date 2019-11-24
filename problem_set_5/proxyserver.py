@@ -45,6 +45,20 @@ def is_blocked(client_socket, client_addr, details):
         return False
     return True
 
+# check whether file is already cached or not
+def get_current_cache_info(fileurl):
+
+    if fileurl.startswith("/"):
+        fileurl = fileurl.replace("/", "", 1)
+
+    cache_path = CACHE_DIR + "/" + fileurl.replace("/", "__")
+
+    if os.path.isfile(cache_path):
+        last_mtime = time.strptime(time.ctime(os.path.getmtime(cache_path)), "%a %b %d %H:%M:%S %Y")
+        return cache_path, last_mtime
+    else:
+        return cache_path, None
+
 # collect all cache info
 def get_cache_details(client_addr, details):
     #get_access(details["total_url"])
