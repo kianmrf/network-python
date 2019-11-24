@@ -47,11 +47,11 @@ def is_blocked(client_socket, client_addr, details):
 
 # collect all cache info
 def get_cache_details(client_addr, details):
-    get_access(details["total_url"])
-    add_log(details["total_url"], client_addr)
+    #get_access(details["total_url"])
+    #add_log(details["total_url"], client_addr)
     do_cache = True
     cache_path, last_mtime = get_current_cache_info(details["total_url"])
-    leave_access(details["total_url"])
+    #leave_access(details["total_url"])
     details["do_cache"] = do_cache
     details["cache_path"] = cache_path
     details["last_mtime"] = last_mtime
