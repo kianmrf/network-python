@@ -71,6 +71,57 @@ def get_cache_details(client_addr, details):
     details["last_mtime"] = last_mtime
     return details
 
+# serve get request
+def serve_get(client_socket, client_addr, details):
+    try:
+        #print details["client_data"], details["do_cache"], details["cache_path"], details["last_mtime"]
+        client_data = details["client_data"]
+        do_cache = details["do_cache"]
+        cache_path = details["cache_path"]
+        last_mtime = details["last_mtime"]
+
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.connect((details["server_url"], details["server_port"]))
+        server_socket.send(details["client_data"])
+
+        reply = server_socket.recv(BUFFER_SIZE)
+        if last_mtime and "304 Not Modified" in reply:
+            print "returning cached file %s to %s" % (cache_path, str(client_addr))
+            get_access(details["total_url"])
+            f = open(cache_path, 'rb')
+            chunk = f.read(BUFFER_SIZE)
+            while chunk:
+                client_socket.send(chunk)
+                chunk = f.read(BUFFER_SIZE)
+            f.close()
+            leave_access(details["total_url"])
+
+        else:
+            if do_cache:
+                print "caching file while serving %s to %s" % (cache_path, str(client_addr))
+                get_space_for_cache(details["total_url"])
+                # get_access(details["total_url"])
+                f = open(cache_path, "w+")
+                # print len(reply), reply
+                while len(reply):
+                    client_socket.send(reply)
+                    f.write(reply)
+                    reply = server_socket.recv(BUFFER_SIZE)
+                    #print len(reply), reply
+                f.close()
+                leave_access(details["total_url"])
+                client_socket.send("\r\n\r\n")
+
+        server_socket.close()
+        client_socket.close()
+        return
+
+    except Exception as e:
+        server_socket.close()
+        client_socket.close()
+        print e
+        return
+
 
 # returns a dictionary of details
 def parse_details(client_addr, client_data):
