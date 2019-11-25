@@ -45,6 +45,26 @@ def is_blocked(client_socket, client_addr, details):
         return False
     return True
 
+
+# if cache is full then delete the least recently used cache item
+def get_space_for_cache(fileurl):
+    cache_files = os.listdir(CACHE_DIR)
+    if len(cache_files) < MAX_CACHE_BUFFER:
+        return
+    # """"
+    # last_mtime = min(os.path.getmtime(CACHE_DIR + "/" + file) for file in cache_files)
+    # print last_mtime
+    # file = [file for file in cache_files if os.path.getmtime(CACHE_DIR + "/" + file) == last_mtime][0]
+    # print file
+    # os.remove(CACHE_DIR + "/" + file)
+    # print file, "removed"
+    # """
+    last_mtime = min(logs[file][-1]["datetime"] for file in cache_files)
+    file_to_del = [file for file in cache_files if logs[file][-1]["datetime"] == last_mtime][0]
+
+    os.remove(CACHE_DIR + "/" + file_to_del)
+
+
 # check whether file is already cached or not
 def get_current_cache_info(fileurl):
 
