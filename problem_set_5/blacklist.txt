@@ -1,0 +1,10 @@
+bing.com:80
+bing.com
+youtube.com:80
+youtube.com
+http://bing.com:80
+https://bing.com:80
+https://bing.com
+https://youtube.com:80
+https://youtube.com
+http://youtube.com:80

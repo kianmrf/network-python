@@ -13,7 +13,8 @@ import webbrowser
 max_connections = 10
 BUFFER_SIZE = 4096
 CACHE_DIR = "./cache"
-BLACKLIST_FILE = ""
+# note that blocked urls are included in the following txt file
+BLACKLIST_FILE = "blacklist.txt"
 MAX_CACHE_BUFFER = 3
 NO_OF_OCC_FOR_CACHE = 2
 blocked = []
