@@ -38,12 +38,44 @@ def main():
         os.remove(CACHE_DIR + "/" + file)
     start_proxy_server()
 
+# lock fileurl
+def get_access(fileurl):
+    if fileurl in locks:
+        lock = locks[fileurl]
+    else:
+        lock = threading.Lock()
+        locks[fileurl] = lock
+    lock.acquire()
 
+# unlock fileurl
+def leave_access(fileurl):
+    if fileurl in locks:
+        lock = locks[fileurl]
+        lock.release()
+    else:
+        print "Lock problem"
+        sys.exit()
 
 def is_blocked(client_socket, client_addr, details):
     if not (details["server_url"] + ":" + str(details["server_port"])) in blocked:
         return False
     return True
+
+
+# insert the header
+def insert_if_modified(details):
+
+    lines = details["client_data"].splitlines()
+    while lines[len(lines)-1] == '':
+        lines.remove('')
+
+    #header = "If-Modified-Since: " + time.strptime("%a %b %d %H:%M:%S %Y", details["last_mtime"])
+    header = time.strftime("%a %b %d %H:%M:%S %Y", details["last_mtime"])
+    header = "If-Modified-Since: " + header
+    lines.append(header)
+
+    details["client_data"] = "\r\n".join(lines) + "\r\n\r\n"
+    return details
 
 
 # if cache is full then delete the least recently used cache item
@@ -81,11 +113,11 @@ def get_current_cache_info(fileurl):
 
 # collect all cache info
 def get_cache_details(client_addr, details):
-    #get_access(details["total_url"])
+    get_access(details["total_url"])
     #add_log(details["total_url"], client_addr)
     do_cache = True
     cache_path, last_mtime = get_current_cache_info(details["total_url"])
-    #leave_access(details["total_url"])
+    leave_access(details["total_url"])
     details["do_cache"] = do_cache
     details["cache_path"] = cache_path
     details["last_mtime"] = last_mtime
@@ -120,7 +152,7 @@ def serve_get(client_socket, client_addr, details):
             if do_cache:
                 print "caching file while serving %s to %s" % (cache_path, str(client_addr))
                 get_space_for_cache(details["total_url"])
-                # get_access(details["total_url"])
+                get_access(details["total_url"])
                 f = open(cache_path, "w+")
                 # print len(reply), reply
                 while len(reply):
