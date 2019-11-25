@@ -8,9 +8,117 @@ import json
 import threading
 from socket import socket, SOCK_STREAM, AF_INET
 import webbrowser
+
+# global variables
+max_connections = 10
+BUFFER_SIZE = 4096
+CACHE_DIR = "./cache"
+BLACKLIST_FILE = ""
+MAX_CACHE_BUFFER = 3
+NO_OF_OCC_FOR_CACHE = 2
+blocked = []
+logs = {}
+locks = {}
+
+
+
+def prepare():
+    if not os.path.isdir(CACHE_DIR):
+        os.makedirs(CACHE_DIR)
+
+    # f = open(BLACKLIST_FILE, "rb")
+    # data = ""
+    # while True:
+    #     chunk = f.read()
+    #     if not len(chunk):
+    #         break
+    #     data += chunk
+    # f.close()
+    # blocked = data.splitlines()
+    for file in os.listdir(CACHE_DIR):
+        os.remove(CACHE_DIR + "/" + file)
+
+# insert the header
+def insert_if_modified(details):
+
+    lines = details["client_data"].splitlines()
+    while lines[len(lines)-1] == '':
+        lines.remove('')
+
+    #header = "If-Modified-Since: " + time.strptime("%a %b %d %H:%M:%S %Y", details["last_mtime"])
+    header = time.strftime("%a %b %d %H:%M:%S %Y", details["last_mtime"])
+    header = "If-Modified-Since: " + header
+    lines.append(header)
+
+    details["client_data"] = "\r\n".join(lines) + "\r\n\r\n"
+    return details
+
+# determine if a certain URL is blocked by Admin
+def is_blocked(client_socket, client_addr, details):
+    if not (details["server_url"] + ":" + str(details["server_port"])) in blocked:
+        return False
+    return True
+
+
+# returns a dictionary of details in a request
+def parse_details(client_addr, client_data):
+    try:
+        # parse first line like below
+        # http:://127.0.0.1:20020/1.data
+
+        lines = client_data.splitlines()
+        while lines[len(lines)-1] == '':
+            lines.remove('')
+        first_line_tokens = lines[0].split()
+        url = first_line_tokens[1]
+
+        # get starting index of IP
+        url_pos = url.find("://")
+        if url_pos != -1:
+            protocol = url[:url_pos]
+            url = url[(url_pos+3):]
+        else:
+            protocol = "http"
+
+        # get port if any
+        # get url path
+        port_pos = url.find(":")
+        path_pos = url.find("/")
+        if path_pos == -1:
+            path_pos = len(url)
+
+
+        # change request path accordingly
+        if port_pos==-1 or path_pos < port_pos:
+            server_port = 80
+            server_url = url[:path_pos]
+        else:
+            server_port = int(url[(port_pos+1):path_pos])
+            server_url = url[:port_pos]
+
+        # build up request for server
+        first_line_tokens[1] = url[path_pos:]
+        lines[0] = ' '.join(first_line_tokens)
+        client_data = "\r\n".join(lines) + '\r\n\r\n'
+
+        return {
+            "server_port" : server_port,
+            "server_url" : server_url,
+            "total_url" : url,
+            "client_data" : client_data,
+            "protocol" : protocol,
+            "method" : first_line_tokens[0],
+        }
+
+    except Exception as e:
+        print e
+        return None
+
+
 #Create a TCP socket
 #Notice the use of SOCK_STREAM for TCP packets
 def main():
+    prepare()
     serverSocket = socket(AF_INET, SOCK_STREAM)
     serverPort=1616
     # Assign IP address and port number to socket
