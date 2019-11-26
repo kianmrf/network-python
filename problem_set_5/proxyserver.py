@@ -14,7 +14,7 @@ import email.utils as eut
 max_connections = 10
 BUFFER_SIZE = 4096
 CACHE_DIR = "./cache"
-BLACKLIST_FILE = ""
+BLACKLIST_FILE = "blacklist.txt"
 MAX_CACHE_BUFFER = 3
 NO_OF_OCC_FOR_CACHE = 2
 blocked = []
@@ -25,15 +25,15 @@ def main():
     if not os.path.isdir(CACHE_DIR):
         os.makedirs(CACHE_DIR)
 
-    # f = open(BLACKLIST_FILE, "rb")
-    # data = ""
-    # while True:
-    #     chunk = f.read()
-    #     if not len(chunk):
-    #         break
-    #     data += chunk
-    # f.close()
-    # blocked = data.splitlines()
+    f = open(BLACKLIST_FILE, "rb")
+    data = ""
+    while True:
+        chunk = f.read()
+        if not len(chunk):
+            break
+        data += chunk
+    f.close()
+    blocked = data.splitlines()
     for file in os.listdir(CACHE_DIR):
         os.remove(CACHE_DIR + "/" + file)
     start_proxy_server()
@@ -99,11 +99,17 @@ def get_space_for_cache(fileurl):
 
 # check whether file is already cached or not
 def get_current_cache_info(fileurl):
-
+    cache_path = CACHE_DIR
     if fileurl.startswith("/"):
         fileurl = fileurl.replace("/", "", 1)
 
-    cache_path = CACHE_DIR + "/" + fileurl.replace("/", "__")
+    for dir in fileurl.split(":"):
+        if not os.path.isdir(dir):
+            os.makedirs(dir)
+            cache_path = cache_path +"/" +dir
+        else:
+            continue
+    #cache_path = CACHE_DIR + "/" + fileurl.replace("/", "__")
 
     if os.path.isfile(cache_path):
         last_mtime = time.strptime(time.ctime(os.path.getmtime(cache_path)), "%a %b %d %H:%M:%S %Y")
@@ -243,11 +249,7 @@ def handle_one_request_(client_socket, client_addr, client_data):
 
     isb = is_blocked(client_socket, client_addr, details)
 
-    """
-        Here we can check whether request is from outside the campus area or not.
-        We have IP and port to which the request is being made.
-        We can send error message if required.
-    """
+    # check if requested URL is blocked
 
     if isb:
         print "Block status : ", isb

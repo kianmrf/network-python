@@ -8,10 +8,12 @@ import json
 import threading
 from socket import socket, SOCK_STREAM, AF_INET
 import webbrowser
+import urllib2
 
 # global variables
 max_connections = 10
 BUFFER_SIZE = 4096
+# local directory to keep the cached data
 CACHE_DIR = "./cache"
 # note that blocked urls are included in the following txt file
 BLACKLIST_FILE = "blacklist.txt"
@@ -116,6 +118,22 @@ def parse_details(client_addr, client_data):
         return None
 
 
+def get_requests(details):
+    client_data = details["client_data"]
+    #do_cache = details["do_cache"]
+    #cache_path = details["cache_path"]
+    #last_mtime = details["last_mtime"]
+
+    server_socket = socket(AF_INET, SOCK_STREAM)
+    server_socket.connect((details["server_url"], details["server_port"]))
+    server_socket.send(details["client_data"])
+
+    reply = server_socket.recv(BUFFER_SIZE)
+
+    print (reply)
+
+
+
 #Create a TCP socket
 #Notice the use of SOCK_STREAM for TCP packets
 def main():
@@ -138,8 +156,12 @@ def main():
             requesting_url = string_list[1]
 
             print('Client request ',requesting_url.split("://")[1].split("/")[0])
+            details = parse_details(addr, message)
+            get_requests(details)
 
-            connectionSocket.close()
+
+
+            #connectionSocket.close()
         except IOError:
             header = 'HTTP/1.1 404 Not Found\n\n'
             response = '<html><body><center><h3>Error 404: File not found</h3></center></body></html>'.encode('utf-8')
