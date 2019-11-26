@@ -24,6 +24,27 @@ logs = {}
 locks = {}
 
 
+# check whether file is already cached or not
+def cache_exists(fileurl):
+    print(fileurl)
+    cache_path = CACHE_DIR
+    os.chdir(CACHE_DIR)
+    print("\n" + cache_path)
+    if fileurl.startswith("/"):
+        fileurl = fileurl.replace("/", "", 1)
+
+    for dir in fileurl.split(":"):
+        cache_path = cache_path +"/" +dir
+        if not os.path.isdir(cache_path):
+            os.makedirs(dir)
+    #cache_path = CACHE_DIR + "/" + fileurl.replace("/", "__")
+
+    if os.path.isfile(cache_path):
+        last_mtime = time.strptime(time.ctime(os.path.getmtime(cache_path)), "%a %b %d %H:%M:%S %Y")
+        return cache_path, last_mtime
+    else:
+        return cache_path, None
+
 
 def prepare():
     if not os.path.isdir(CACHE_DIR):
@@ -132,6 +153,7 @@ def get_requests(details):
 
     print (reply)
 
+    cache_exists(details["total_url"])
 
 
 #Create a TCP socket
