@@ -14,7 +14,7 @@ import urllib2
 max_connections = 10
 BUFFER_SIZE = 4096
 # local directory to keep the cached data
-CACHE_DIR = "./cache"
+CACHE_DIR = "../cache"
 # note that blocked urls are included in the following txt file
 BLACKLIST_FILE = "blacklist.txt"
 MAX_CACHE_BUFFER = 3
@@ -28,14 +28,14 @@ locks = {}
 def cache_exists(fileurl):
     print(fileurl)
     cache_path = CACHE_DIR
-    os.chdir(CACHE_DIR)
+    os.chdir(cache_path)
     print("\n" + cache_path)
     if fileurl.startswith("/"):
         fileurl = fileurl.replace("/", "", 1)
 
     for dir in fileurl.split(":"):
         cache_path = cache_path +"/" +dir
-        if not os.path.isdir(cache_path):
+        if not os.path.exists(dir):
             os.makedirs(dir)
     #cache_path = CACHE_DIR + "/" + fileurl.replace("/", "__")
 
@@ -50,17 +50,19 @@ def prepare():
     if not os.path.isdir(CACHE_DIR):
         os.makedirs(CACHE_DIR)
 
-    # f = open(BLACKLIST_FILE, "rb")
-    # data = ""
-    # while True:
-    #     chunk = f.read()
-    #     if not len(chunk):
-    #         break
-    #     data += chunk
-    # f.close()
-    # blocked = data.splitlines()
+    f = open(BLACKLIST_FILE, "rb")
+    data = ""
+    while True:
+        chunk = f.read()
+        if not len(chunk):
+            break
+        data += chunk
+    f.close()
+    blocked = data.splitlines()
+    print("BLOCKED = " + str(blocked))
     for file in os.listdir(CACHE_DIR):
-        os.remove(CACHE_DIR + "/" + file)
+        #os.remove(CACHE_DIR + "/" + file)
+        print("EXISTING CACHE -> " + file)
 
 # insert the header
 def insert_if_modified(details):
@@ -78,7 +80,7 @@ def insert_if_modified(details):
     return details
 
 # determine if a certain URL is blocked by Admin
-def is_blocked(client_socket, client_addr, details):
+def is_blocked(details):
     if not (details["server_url"] + ":" + str(details["server_port"])) in blocked:
         return False
     return True
@@ -179,9 +181,12 @@ def main():
 
             print('Client request ',requesting_url.split("://")[1].split("/")[0])
             details = parse_details(addr, message)
-            get_requests(details)
 
 
+            if (is_blocked(details)):
+                print("ERROR: Requested URL is BLOCKED!")
+            else:
+                get_requests(details)
 
             #connectionSocket.close()
         except IOError:
