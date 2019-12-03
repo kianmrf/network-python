@@ -27,10 +27,27 @@ def html(value):
 
 def main():
 	print "Content-type: text/html\n";
-	value = ""
-	parsed = mod_html.parse()
-	if 'filename' in parsed:
-		value = parsed['filename']
-	html(value)
+	html = """
+	<!doctype html>
+                <html>
+                        <head>
+                                <title> FTP Proxy Example </title>
+                        </head>
+                        <body>
+                                <h1> Welcome to FTP Client </h1>
+                                <p>
+                                        Enter Filename: <input type="text" name$
+
+                                        <input type="submit" value="Submit" >
+                                </p>
+
+                        </body>
+                </html> """
+	print(html)
+	#value = ""
+	#parsed = mod_html.parse()
+	#if 'filename' in parsed:
+	#	value = parsed['filename']
+	#html(value)
 	
 main()
