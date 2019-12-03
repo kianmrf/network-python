@@ -1,14 +1,14 @@
 #!/usr/bin/python
 
-import os
 import sys
+import os
 import mod_html
 
 sys.stderr = sys.stdout
 
 def html(value):
 	# load page
-	print """\
+	print '''\
 		<!doctype html>
 		<html>
 			<head>
@@ -23,7 +23,8 @@ def html(value):
 				</p>
 				
 			</body>
-		</html>""".format(value)
+		</html>'''.format(value)
+
 def main():
 	print "Content-type: text/html\n";
 	value = ""
