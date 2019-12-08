@@ -30,7 +30,7 @@ def main():
             if(myfile == ''):
                 myfile = 'index.html'
 
-            file = open(myfile,'rb') # open file , r => read , b => byte format
+            file = open(myfile,'r') # open file , r => read 
             response = file.read()
             file.close()
 
