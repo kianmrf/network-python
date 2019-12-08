@@ -33,35 +33,13 @@ form = cgi.FieldStorage()
 
 # Get data from fields
 fromAddress = form.getvalue('from')
+emailServerName = fromAddress.split("@").partition(".")[1]
 to  = form.getvalue('to')
 subject = form.getvalue('subject')
 message = form.getvalue('message')
 
 
-print "Content-type:text/html\r\n\r\n"
-print "<html>"
-print "<head>"
-print "<title>E-mail Client Example</title>"
-print "</head>"
-print "<body>"
-print "<h1>E-mail Client Example</h1>"
-print "<form action='/~mmaro017/cgi-bin/send-email.cgi' target='_self' method='get' >"
-print "<fieldset>"
-print "<legend>Email Contents:</legend>"
-print "From address:<br>"
-print "<input type='text' name='from' value='%s'><br>" % (fromAddress)
-print "To address:<br>"
-print "<input type='text' name='to' value='%s'><br>" % (to)
-print "Subject:<br>"
-print "<input type='text' name='subject' value='%s'><br>" % (subject)
-print "Message:<br>"
-print "<input type='text' rows='6' cols='50' name='message' value='%s'></textarea><br><br>" % (message)
-print "<input type='submit' value='Send Again!'>"
-print "</fieldset>"
-print "</form>"
-# print "<h2>Hello %s %s %s %s</h2>" % (fromAddress.split('@')[0], to.split('@')[1], subject, message)
-print "</body>"
-print "</html>"
+
 
 # Debug and logging
 print fromAddress, to, subject, message
@@ -106,3 +84,31 @@ send_recv(clientSocket, ".", '250');
 #Send QUIT command and get server response.
 quitCommand='QUIT'
 quitRcpt = send_recv(clientSocket, quitCommand, '221')
+
+print "Content-type:text/html\r\n\r\n"
+print "<html>"
+print "<head>"
+print "<title>E-mail Client Example</title>"
+print "</head>"
+print "<body>"
+print "<script>"
+print "    alert('%s')" % (serverName)
+print "</script>"
+print "<h1>E-mail Client Example</h1>"
+print "<form action='/~mmaro017/cgi-bin/send-email.cgi' target='_self' method='get' >"
+print "<fieldset>"
+print "<legend>Email Contents:</legend>"
+print "From address:<br>"
+print "<input type='text' name='from' value='%s'><br>" % (fromAddress)
+print "To address:<br>"
+print "<input type='text' name='to' value='%s'><br>" % (to)
+print "Subject:<br>"
+print "<input type='text' name='subject' value='%s'><br>" % (subject)
+print "Message:<br>"
+print "<input type='text' rows='6' cols='50' name='message' value='%s'></textarea><br><br>" % (message)
+print "<input type='submit' value='Send Again!'>"
+print "</fieldset>"
+print "</form>"
+# print "<h2>Hello %s %s %s %s</h2>" % (fromAddress.split('@')[0], to.split('@')[1], subject, message)
+print "</body>"
+print "</html>"
