@@ -3,6 +3,7 @@
 import socket
 import time
 import sys
+import base64, getpass, ssl
 
 sys.stderr = sys.stdout
 
@@ -105,4 +106,3 @@ send_recv(clientSocket, ".", '250');
 #Send QUIT command and get server response.
 quitCommand='QUIT'
 quitRcpt = send_recv(clientSocket, quitCommand, '221')
-
