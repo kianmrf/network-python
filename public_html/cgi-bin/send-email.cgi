@@ -3,7 +3,7 @@
 import socket
 import time
 import sys
-import base64, getpass, ssl
+#import base64, getpass, ssl
 
 sys.stderr = sys.stdout
 
@@ -33,7 +33,7 @@ form = cgi.FieldStorage()
 
 # Get data from fields
 fromAddress = form.getvalue('from')
-emailServerName = fromAddress.split("@").partition(".")[1]
+#emailServerName = fromAddress.split("@").partition(".")[1]
 to  = form.getvalue('to')
 subject = form.getvalue('subject')
 message = form.getvalue('message')
@@ -91,9 +91,9 @@ print "<head>"
 print "<title>E-mail Client Example</title>"
 print "</head>"
 print "<body>"
-print "<script>"
-print "    alert('%s')" % (serverName)
-print "</script>"
+#print "<script>"
+#print "    alert('%s')" % (emailServerName)
+#print "</script>"
 print "<h1>E-mail Client Example</h1>"
 print "<form action='/~mmaro017/cgi-bin/send-email.cgi' target='_self' method='get' >"
 print "<fieldset>"
