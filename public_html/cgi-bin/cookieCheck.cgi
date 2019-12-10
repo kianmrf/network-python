@@ -16,9 +16,13 @@ if 'HTTP_COOKIE' in os.environ:
     c=Cookie.SimpleCookie()
     c.load(cookie_string)
 
-    try:
-        data=c['session'].value
-        print "cookie data: "+data+"<br>"
+    try:	
+        for ckey in c.keys():
+		data = c[ckey].value
+		print "cookie name: " + ckey + "   "
+		print "cookie data: " + data + "<br>" 
+        #data=c['LPVID'].value
+        #print "cookie data: "+data+"<br>"
     except KeyError:
         print "The cookie was not set or has expired<br>"
 
