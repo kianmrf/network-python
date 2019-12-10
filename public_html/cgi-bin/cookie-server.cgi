@@ -1,10 +1,24 @@
 #!/usr/bin/env python
 
 import sys
-
+import Cookie
+import datetime
+import random
 import cgi
 import cgitb; cgitb.enable()  # for troubleshooting
 
+sys.stderr = sys.stdout
+
+expiration = datetime.datetime.now() + datetime.timedelta(days=30)
+cookie = Cookie.SimpleCookie()
+cookie["session"] = 2
+#cookie["session"]["domain"] = ".jayconrod.com"
+#cookie["session"]["path"] = "/"
+#cookie["session"]["expires"] =  expiration.strftime("%a, %d-%b-%Y %H:%M:%S PST")
+
+
+
+######## Dynamic HTML Page
 print "Content-type: text/html"
 print
 
