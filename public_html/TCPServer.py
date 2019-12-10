@@ -2,6 +2,9 @@
 
 from socket import socket, SOCK_STREAM, AF_INET
 import webbrowser
+import random
+
+
 #Create a TCP socket
 #Notice the use of SOCK_STREAM for TCP packets
 def main():
@@ -41,7 +44,8 @@ def main():
                 mimetype = 'text/css'
             else:
                 mimetype = 'text/html'
-            header += 'Content-Type: '+str(mimetype)+'\n\n'
+            header += 'Content-Type: '+str(mimetype)+'\n'
+	    header += 'Set-Cookie: '+ 'session='+str(random.randint(1,1000000))+';\n\n' 
             final_response = header.encode('utf-8')
             final_response += response
             connectionSocket.send(final_response)
